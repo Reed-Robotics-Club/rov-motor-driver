@@ -1,0 +1,218 @@
+// adafruit-Adafruit-Motor-Shield-library-99381df - Version: Latest 
+#include <AFMotor.h>
+
+/*
+
+*/
+
+// create 4 motors
+// numbering is clockwise from top left
+AF_DCMotor motor1(1);
+AF_DCMotor motor2(2);
+AF_DCMotor motor3(3);
+AF_DCMotor motor4(4);
+
+// create a servo
+// Servo servo1;
+
+void setup() {
+  Serial.begin(9600);       // set up Serial library at 9600 bps
+  Serial.println("Beginning setup");
+  
+  // initialize all four motors
+  motor1.setSpeed(200);
+  motor1.run(RELEASE);
+  
+  motor2.setSpeed(200);
+  motor2.run(RELEASE);
+  
+  motor3.setSpeed(200);
+  motor3.run(RELEASE);
+  
+  motor4.setSpeed(200);
+  motor4.run(RELEASE);
+  
+  // if we end up using a servo this will initialize it
+  // servo1.attach(9);
+  
+  Serial.println("Setup complete");
+    
+}
+// define variables for the speeds
+int speed; // current speed increment
+int speed1; // speed of top left
+int speed2; // speed of top right
+int speed3; // speed of bottom right
+int speed4; // speed of bottom left
+
+// define booleans for the controls
+boolean left; // left turn
+boolean right; // right turn
+boolean up; // pitch up
+boolean down; // pitch down
+boolean forward; // move forward
+boolean backward; // move back
+boolean fast; // flanking speed
+boolean slow; // slow
+
+// variable for serial input
+char input = 0;
+
+void loop() {
+  // check for key presses/releases and set booleans accordingly
+  // during operation, a key pressed will be sent to Serial as a particular character
+  // a key released will be sent to Serial as a different character
+  
+  while (Serial.available() > 0) { 
+    input = Serial.read();
+    switch (input) {
+    case 'q':
+      forward=true;
+      Serial.println("Moving forward");
+      break;
+    case 'a':
+      forward=false;
+      break;
+    case 'w':
+      backward=true;
+      Serial.println("Moving backward");
+      break;
+    case 's':
+      backward=false;
+      break;
+    case 'e':
+      left=true;
+      Serial.println("Turning left");
+      break;
+    case 'd':
+      left=false;
+      break;
+    case 'r':
+      right=true;
+      Serial.println("Turning right");
+      break;
+    case 'f':
+      right=false;
+      break;
+    case 't':
+      up=true;
+      Serial.println("Pitching up");
+      break;
+    case 'g':
+      up=false;
+      break;
+    case 'y':
+      down=true;
+      Serial.println("Pitching down");
+      break;
+    case 'h':
+      down=false;
+      break;
+    case 'u':
+      fast=true;
+      Serial.println("Flanking speed!");
+      break;
+    case 'j':
+      fast=false;
+      break;
+    case 'i':
+      slow=true;
+      Serial.println("Sonic is sad");
+      break;
+    case 'k':
+      slow=false;
+      break;
+    default:
+      break;
+    }
+  }
+ 
+  // set speed increment
+  if (fast==true) {
+    speed=400; // fast speed
+  } else if (slow==true) { // we could maybe reorder this depending on what we want to have priority
+    speed=100; // slow speed
+  } else {
+    speed=200; // normal speed
+  }
+  
+  // set all motor speeds to 0 to avoid positive feedback loop
+  speed1=0;
+  speed2=0;
+  speed3=0;
+  speed4=0;
+  
+  // increment speeds based on control input
+  
+  if (forward==true) { // drive all four motors
+    speed1=speed1+speed;
+    speed2=speed2+speed;
+    speed3=speed3+speed;
+    speed4=speed4+speed;
+  }
+  if (backward==true) { // drive all four motors backwards
+    speed1=speed1-speed;
+    speed2=speed2-speed;
+    speed3=speed3-speed;
+    speed4=speed4-speed;
+  }
+  if (right==true) { // turn right
+    // drive left motors forwards
+    speed1=speed1+speed;
+    speed4=speed4+speed;
+    if (slow==true) { // check if in slow mode
+      // drive right motors backwards
+      speed2=speed2-speed;
+      speed3=speed3-speed;
+    }
+  }
+  if (left==true) { // turn left
+    // drive right motors forwards
+    speed2=speed2+speed;
+    speed3=speed3+speed;
+    if (slow==true) { // check if in slow mode
+      // drive left motors backwards
+      speed1=speed1-speed;
+      speed4=speed4-speed;
+    }
+  }
+  if (down==true) { // drive top motors forwards
+    speed1=speed1+speed;
+    speed2=speed2+speed;
+  }
+  if (up==true) { // drive bottom motors forwards
+    speed3=speed3+speed;
+    speed4=speed4+speed;
+  }
+  
+  // run all motors at determined speeds
+  
+  motor1.setSpeed(abs(speed1)); // run motor 1 at its speed
+  if (speed1<<0) { // check if motor 1 should go backwards
+    motor1.run(BACKWARD); 
+  } else {
+    motor1.run(FORWARD);
+  }
+  
+  motor2.setSpeed(abs(speed2)); // run motor 2 at its speed
+  if (speed2<<0) { // check if motor 2 should go backwards
+    motor2.run(BACKWARD); 
+  } else {
+    motor2.run(FORWARD);
+  }
+  
+  motor3.setSpeed(abs(speed3)); // run motor 3 at its speed
+  if (speed3<<0) { // check if motor 3 should go backwards
+    motor3.run(BACKWARD); 
+  } else {
+    motor3.run(FORWARD);
+  }
+  
+  motor4.setSpeed(abs(speed4)); // run motor 4 at its speed
+  if (speed4<<0) { // check if motor 4 should go backwards
+    motor4.run(BACKWARD); 
+  } else {
+    motor4.run(FORWARD);
+  }
+    
+}
