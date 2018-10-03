@@ -129,11 +129,11 @@ void loop() {
  
   // set speed increment
   if (fast==true) {
-    speed=400; // fast speed
+    speed=150; // fast speed
   } else if (slow==true) { // we could maybe reorder this depending on what we want to have priority
-    speed=100; // slow speed
+    speed=50; // slow speed
   } else {
-    speed=200; // normal speed
+    speed=100; // normal speed
   }
   
   // set all motor speeds to 0 to avoid positive feedback loop
