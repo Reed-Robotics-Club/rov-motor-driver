@@ -13,7 +13,6 @@
 = Project: Reed Robotics ROV
 
 The Reed Robotics Club is building a simple ROV powered by bilge-pump motors.
-This is the motor driver program.
 
 == Step 1: Installation
 
