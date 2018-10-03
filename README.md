@@ -29,7 +29,7 @@ This is the motor driver program.
 
 == Step 3: Run the controller
 
-1. Start the controller program
+1. Compile controller program and run from console
 
 2. Follow prompts to select the port that your board is connected to
 
