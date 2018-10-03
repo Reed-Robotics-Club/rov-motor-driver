@@ -1,0 +1,140 @@
+import processing.serial.*;
+
+// The serial port:
+Serial mySerialPort;       
+
+
+color fillVal = color(0);
+
+void setup() {
+  size(100, 100);
+  noStroke();
+  background(0);
+  printArray(Serial.list()); // do this to find your arduino
+  // Open the port you are using at the rate you want:
+  mySerialPort = new Serial(this, Serial.list()[1], 9600);
+  mySerialPort.clear();
+}
+
+void draw() { 
+  background(fillVal);
+  
+  // check if there is new serial input to send
+  if (newInput==true) {
+    fillVal = color(20,75,200);
+    sendInput();
+  } else {
+    fillVal = color(0);
+  }
+  newInput = false; // reset input indicator
+}
+
+boolean isUp, isDown, isLeft, isRight, isFast, isSlow, isForward, isBackward, newInput;
+
+void keyPressed() { // called once every time a key is pressed
+  if (key==CODED){ // checks for non-ASCII keys (arrow keys, etc.)
+    setMove(keyCode, true); 
+  } else {
+    moveSet(true); 
+  }
+}
+ 
+void keyReleased() { // called once every time a key is released
+  if (key==CODED) { // checks for non-ASCII keys (arrow keys, etc.)
+    setMove(keyCode, false);
+  } else {
+    moveSet(false);
+  }
+}
+ 
+boolean setMove(int k, boolean b) {
+  newInput = true;
+  switch (k) { 
+  case UP:
+    return isUp = b;
+ 
+  case DOWN:
+    return isDown = b;
+ 
+  case LEFT:
+    return isLeft = b;
+ 
+  case RIGHT:
+    return isRight = b;
+   
+  case SHIFT:
+    return isFast = b;
+    
+  case CONTROL:
+    return isSlow = b;
+    
+  default:
+    return b;
+  }
+}
+
+boolean moveSet(boolean b){
+  newInput = true;
+  switch(key){
+  case 'w':
+    return isForward = b;
+    
+  case 's':
+    return isBackward = b;
+    
+  default:
+    return b;
+  }
+}
+
+void sendInput() { // called by main loop when input functions indicate new keypresses
+  // series of if statements checking for each type of input to be sent
+  if (isUp==true) {
+    mySerialPort.write('t');
+  }
+  if (isUp==false) {
+    mySerialPort.write('g');
+  }
+  if (isDown==true) {
+    mySerialPort.write('y');
+  }
+  if (isDown==false) {
+    mySerialPort.write('h');
+  }
+  if (isLeft==true) {
+    mySerialPort.write('e');
+  }
+  if (isLeft==false) {
+    mySerialPort.write('d');
+  }
+  if (isRight==true) {
+    mySerialPort.write('r');
+  }
+  if (isRight==false) {
+    mySerialPort.write('f');
+  }
+  if (isForward==true) {
+    mySerialPort.write('q');
+  }
+  if (isForward==false) {
+    mySerialPort.write('a');
+  }
+  if (isBackward==true) {
+    mySerialPort.write('w');
+  }
+  if (isBackward==false) {
+    mySerialPort.write('s');
+  }
+  if (isFast==true) {
+    mySerialPort.write('u');
+  }
+  if (isFast==false) {
+    mySerialPort.write('j');
+  }
+  if (isSlow==true) {
+    mySerialPort.write('i');
+  }
+  if (isSlow==false) {
+    mySerialPort.write('k');
+  }
+}
