@@ -1,4 +1,6 @@
 import processing.serial.*;
+import java.util.Scanner;
+Scanner in = new Scanner(System.in);
 
 // The serial port:
 Serial mySerialPort;       
@@ -12,7 +14,9 @@ void setup() {
   background(0);
   printArray(Serial.list()); // do this to find your arduino
   // Open the port you are using at the rate you want:
-  mySerialPort = new Serial(this, Serial.list()[1], 9600);
+  // println("Select appropriate port using its number in above list:");
+  int port = 1; // in.nextByte();
+  mySerialPort = new Serial(this, Serial.list()[port], 9600);
   mySerialPort.clear();
 }
 
