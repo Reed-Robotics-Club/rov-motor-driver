@@ -31,15 +31,13 @@ This is the motor driver program.
 
 1. Compile controller program and run from console
 
-2. Follow prompts to select the port that your board is connected to
+2. Select the small black window that appears
 
-3. Select the small black window that appears
+3. The arrow keys control pitch and yaw; W and S control forwards and backwards
 
-4. The arrow keys control pitch and yaw; W and S control forwards and backwards
+4. SHIFT increases speed while CONTROL reduces speed preserving yaw speed
 
-5. SHIFT increases speed while CONTROL reduces speed preserving yaw speed
-
-6. The small window will flash on each keypress and release
+5. The small window will flash on each keypress and release
 
 === License
 
